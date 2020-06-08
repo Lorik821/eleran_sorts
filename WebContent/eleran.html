@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Eleran</title>
+</head>
+<body>
+	<form action="http://localhost:8080/eleran_sorts/toto" method="get">
+	<label for="IdSpellbook">Numéro du grimoire : </label>
+	<input type="hidden" id="mainParam" name="mainParam" value="1">
+	<input type="number" id="IdSpellbook" name="IdSpellbook">  
+	<button>Voir les sorts</button> 
+	</form>
+	<p><br/></p>
+	
+	<form action="http://localhost:8080/eleran_sorts/toto" method="get">
+	<label for="spellName">Recherche par nom de sort : </label>
+	<input type="hidden" id="mainParam" name="mainParam" value="2">
+	<input type="text" id="spellName" name="spellName">
+	<button>Voir les sorts</button> 
+	</form>	
+</body>
+</html>
