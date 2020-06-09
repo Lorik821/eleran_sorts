@@ -28,7 +28,7 @@ public class JDBC {
     	/* Connexion à la base de données */
     	String url = "jdbc:mysql://localhost:3306/pathfinder";
     	String utilisateur = "root";
-    	String motDePasse = "***********";
+    	String motDePasse = "chronos";
     	try {
     	    connexion = DriverManager.getConnection( url, utilisateur, motDePasse );
 
@@ -238,6 +238,22 @@ public class JDBC {
     		resultat.next();
     		String spellName = resultat.getString("name");
     		statut = statement.executeUpdate("UPDATE spell_full SET linktext = " + "'HYPERLINK(\"" + link + "\",\"" + spellName + "\")' WHERE id = " + idSpell + ";");
+    		return statut;
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+    	return statut;
+    }
+    
+    /*
+     * Permet d'ajouter un grimoire à la base de données.
+     */
+    public int addSpellbook (String nbPages, String idSpellbook) {
+    	Statement statement = null;
+    	int statut = 0;
+    	try {
+    		statement = connexion.createStatement();
+    		statut = statement.executeUpdate("INSERT INTO spellbook VALUES (" + idSpellbook + "," + nbPages + ");");
     		return statut;
     	} catch (SQLException e) {
     		e.printStackTrace();

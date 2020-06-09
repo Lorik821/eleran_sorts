@@ -1,6 +1,6 @@
 /**
  * Fonctionnalités à ajouter :
- * Ajouter un nouveau grimoire directement dipuis l'interface
+ * Ajouter un nouveau grimoire directement depuis l'interface
  * Optimiser le programme en utilisant un bean pour la liste des sorts à chaque requête
  * Requête de listing des sorts par niveau appartenant à au moins un grimoire
  * Requête de listing des sorts par jds de même type (sorts offensif uniquement)
@@ -30,6 +30,7 @@ public class MainServlet extends HttpServlet {
 		 * 2 : recherche d'un sort par nom
 		 * 3 : ajout d'un sort à un grimoire
 		 * 4 : mise à jour du lien hypertext d'un sort
+		 * 5 : ajout d'un nouveau grimoire
 		 */
 		jdbc = new JDBC ();
 		jdbc.connection();
@@ -47,6 +48,8 @@ public class MainServlet extends HttpServlet {
 			addSpellToSpellbook (request);
 		else if (mainParam.equals("4"))   // Dans le cas d'une mise à jour d'un lien
 			addLinkToBADO (request);
+		else if (mainParam.equals("5")) // Dans le cas de l'ajout d'un nouveau grimoire
+			addSpellbook (request);
 		
 		
 		
@@ -131,6 +134,11 @@ public class MainServlet extends HttpServlet {
 		String paramIdSpell = request.getParameter("idSpell");
 		
 		jdbc.addLink(paramIdSpell, textLink);
+	}
+	
+	public void addSpellbook (HttpServletRequest request)
+	{
+		jdbc.addSpellbook(request.getParameter("nbPages"), request.getParameter("id"));		
 	}
 
 }

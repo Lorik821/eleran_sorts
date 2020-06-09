@@ -18,6 +18,17 @@
 	<input type="hidden" id="mainParam" name="mainParam" value="2">
 	<input type="text" id="spellName" name="spellName">
 	<button>Voir les sorts</button> 
-	</form>	
+	</form>
+	<p><br/></p>
+	
+	<form action="http://localhost:8080/eleran_sorts/toto" method="get">
+	<label for="nbPages">Nombre de pages vierge du nouveau grimoire</label>
+	<input type="hidden" id="mainParam" name="mainParam" value="5">
+	<input type="number" id="nbPages" name="nbPages">
+	<label for="id">Id du nouveau grimoire</label>
+	<input type="number" id="id" name="id">
+	<button>Ajouter grimoire</button> 
+	</form>
+		
 </body>
 </html>
