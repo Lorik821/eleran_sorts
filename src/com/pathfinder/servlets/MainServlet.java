@@ -1,9 +1,10 @@
 /**
  * Fonctionnalités à ajouter :
- * Ajouter un nouveau grimoire directement depuis l'interface
- * Optimiser le programme en utilisant un bean pour la liste des sorts à chaque requête
  * Requête de listing des sorts par niveau appartenant à au moins un grimoire
  * Requête de listing des sorts par jds de même type (sorts offensif uniquement)
+ * Intégration de la préparation des sorts en temps réel ainsi que des utilisations par jour
+ * Intégration de la métamagie dans la préparation des sorts
+ * Intégration des points d'arcanes
  */
 
 package com.pathfinder.servlets;
@@ -31,6 +32,7 @@ public class MainServlet extends HttpServlet {
 		 * 3 : ajout d'un sort à un grimoire
 		 * 4 : mise à jour du lien hypertext d'un sort
 		 * 5 : ajout d'un nouveau grimoire
+		 * 6 : liste des sorts égal au niveau passé en paramètre
 		 */
 		jdbc = new JDBC ();
 		jdbc.connection();
@@ -50,6 +52,8 @@ public class MainServlet extends HttpServlet {
 			addLinkToBADO (request);
 		else if (mainParam.equals("5")) // Dans le cas de l'ajout d'un nouveau grimoire
 			addSpellbook (request);
+		else if (mainParam.equals("6")) // Dans le cas où l'utilisateur souhaite afficher tous les sorts que son personnage connait de x niveau
+			researchForLevelFromSpellbooks (request);
 		
 		
 		
@@ -139,6 +143,14 @@ public class MainServlet extends HttpServlet {
 	public void addSpellbook (HttpServletRequest request)
 	{
 		jdbc.addSpellbook(request.getParameter("nbPages"), request.getParameter("id"));		
+	}
+	
+	public void researchForLevelFromSpellbooks (HttpServletRequest request)
+	{
+		System.out.println ("ca passe !");
+		Double level = Double.parseDouble(request.getParameter("level"));
+		String message = makeList(jdbc.searchForLevelFromSpellbooks(level));
+		request.setAttribute("test", message);
 	}
 
 }

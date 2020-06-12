@@ -114,10 +114,51 @@ public class JDBC {
 				listAttributeSpell.add("<form action=\"http://localhost:8080/eleran_sorts/toto\" method=\"get\"><input type=\"hidden\" id=\"mainParam\" name=\"mainParam\" value=\"3\">");
 				listAttributeSpell.add("<input type=\"number\" id=\"IdSpellbook\" name=\"IdSpellbook\">");
 				listAttributeSpell.add("<button type=\"button\" >Ajouter au grimoire</button><input type=\"hidden\" id=\"idSpell\" name=\"idSpell\" value=" + resultat.getString("id") + "></form>");
-				//listAttributeSpell.add("<input type=\"hidden\" id=\"idSpell\" name=\"idSpell\""+resultat.getString("id")+">");
 				
 				listSpell.put(i, listAttributeSpell);
-				i++;
+				i++;				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return listSpell;
+    }
+    
+    /*
+     * Fonction qui permet de récupérer la liste des sorts de tous les grimoires du personnage d'un niveau donné.  
+     */
+    public HashMap<Integer, ArrayList<String>> searchForLevelFromSpellbooks (double levelSpell) {
+    	ArrayList<String> listAttributeSpell = new ArrayList<String>();
+    	
+    	HashMap<Integer, ArrayList<String>> listSpell = new HashMap<Integer, ArrayList<String>> ();
+    	/* Création de l'objet gérant les requêtes */
+    	Statement statement = null;
+		try {
+			statement = connexion.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	/* Exécution d'une requête de lecture */
+    	try {
+			ResultSet resultat = statement.executeQuery( "select spell_full.name, spell_full.school, spell_full.wiz, spell_full.short_description, spell_full.linktext, spell_full.id from spell_full, ssb where spell_full.id = ssb.id_spell and wiz = " + levelSpell + ";");
+			int i = 0;
+			while (resultat.next()) {
+				String data = StringUtils.substringBetween(resultat.getString("linktext"), "\"", "\"");
+				listAttributeSpell = new ArrayList<String>();
+				listAttributeSpell.add(resultat.getString("id")); // Ajout de l'id du sort non visible par l'utilisateur
+				listAttributeSpell.add("<a href=\"" + data + "\">" + resultat.getString("name") + "</a>");
+				listAttributeSpell.add(resultat.getString("school"));
+				listAttributeSpell.add(resultat.getString("wiz"));
+				listAttributeSpell.add(resultat.getString("short_description"));
+				listAttributeSpell.add("<form action=\"http://localhost:8080/eleran_sorts/toto\" method=\"get\"><input type=\"hidden\" id=\"mainParam\" name=\"mainParam\" value=\"3\">");
+				listAttributeSpell.add("<input type=\"number\" id=\"IdSpellbook\" name=\"IdSpellbook\">");
+				listAttributeSpell.add("<button type=\"button\" >Ajouter au grimoire</button><input type=\"hidden\" id=\"idSpell\" name=\"idSpell\" value=" + resultat.getString("id") + "></form>");
+				
+				listSpell.put(i, listAttributeSpell);
+				i++;				
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -237,6 +278,13 @@ public class JDBC {
     		ResultSet resultat = statement.executeQuery("SELECT name from spell_full where id = " + idSpell + ";");
     		resultat.next();
     		String spellName = resultat.getString("name");
+    		if (spellName.contains("'")) { // vérifie si le nom du sort ne contiendrait pas un ' qui pourrait causer une erreur au niveau de la base de données
+    			StringBuilder sb = new StringBuilder (spellName);
+    			int index = spellName.indexOf("'");
+    			char ch = '\'';
+    			sb.insert(index+1, ch);
+    			spellName = sb.toString();
+    		}
     		statut = statement.executeUpdate("UPDATE spell_full SET linktext = " + "'HYPERLINK(\"" + link + "\",\"" + spellName + "\")' WHERE id = " + idSpell + ";");
     		return statut;
     	} catch (SQLException e) {
